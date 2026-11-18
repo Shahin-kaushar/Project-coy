@@ -2,15 +2,21 @@
 
 import Image from "next/image";
 
-export default function Header() {
+const LABELS = {
+  home: "Home",
+  discover: "Discover",
+  matches: "Matches",
+};
+
+export default function Header({ tab = "discover" }) {
   return (
-    <header className="flex h-14 shrink-0 items-center justify-between px-5">
-      <div className="flex items-baseline gap-2">
-        <span className="text-[22px] font-semibold tracking-tight">
-          coy<span className="text-coy">.</span>
+    <header className="flex h-16 shrink-0 items-center justify-between px-4">
+      <div className="flex items-center gap-2.5">
+        <span className="font-display text-[26px] font-extrabold leading-none tracking-tight">
+          coy<span className="text-pink">.</span>
         </span>
-        <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[9px] font-medium uppercase tracking-[0.18em] text-white/45">
-          discover
+        <span className="rounded-full border-2 border-ink bg-yellow px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-[0.16em]">
+          {LABELS[tab] ?? LABELS.discover}
         </span>
       </div>
 
@@ -18,12 +24,13 @@ export default function Header() {
         <Image
           src="/avatars/me.svg"
           alt="Your profile"
-          width={34}
-          height={34}
-          className="h-[34px] w-[34px] rounded-full border border-white/15 object-cover"
+          width={40}
+          height={40}
+          className="h-10 w-10 rounded-full border-2 border-ink bg-pink-soft object-cover"
           priority
+          unoptimized
         />
-        <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-mint ring-2 ring-ink" />
+        <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-ink bg-green" />
       </div>
     </header>
   );

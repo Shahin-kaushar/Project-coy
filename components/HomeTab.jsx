@@ -4,23 +4,25 @@ import { FlameIcon, HeartOutlineIcon } from "./icons";
 
 export default function HomeTab({ onOpenDiscover, onOpenMatches }) {
   return (
-    <section className="flex h-full flex-col items-center justify-center px-8 pb-10 text-center">
-      <div className="relative mb-7">
-        <div className="grid h-20 w-20 place-items-center rounded-[26px] border border-white/10 bg-gradient-to-br from-white/10 to-white/[0.02] text-coy">
+    <section className="flex h-full flex-col items-center justify-center px-6 pb-10 text-center">
+      <div className="relative mb-8">
+        <div className="grid h-20 w-20 -rotate-3 place-items-center rounded-[22px] border-2 border-ink bg-white text-pink shadow-hard">
           <HeartOutlineIcon className="h-9 w-9" />
         </div>
-        <span className="absolute -bottom-1 -right-1 grid h-7 w-7 place-items-center rounded-full bg-surface-strong text-[11px] font-semibold text-white/40 ring-1 ring-white/10">
+        <span className="absolute -bottom-2 -right-3 grid h-8 w-8 place-items-center rounded-full border-2 border-ink bg-yellow font-display text-[11px] font-extrabold">
           H
         </span>
       </div>
 
-      <h1 className="text-2xl font-semibold">Home stays blank</h1>
-      <p className="mt-2.5 max-w-[280px] text-[13px] leading-relaxed text-white/50">
+      <h1 className="font-display text-3xl font-extrabold leading-tight tracking-tight">
+        Home stays blank.
+      </h1>
+      <p className="mt-3 max-w-[290px] text-[13px] leading-relaxed text-ink/55">
         This tab is intentionally a placeholder, as the assignment asked. The build focuses on a
         new Discover experience alongside Coy&apos;s existing app.
       </p>
 
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-2.5">
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
         <button type="button" className="btn-primary" onClick={onOpenDiscover}>
           <FlameIcon className="h-4 w-4" />
           Open Discover
@@ -30,7 +32,7 @@ export default function HomeTab({ onOpenDiscover, onOpenMatches }) {
         </button>
       </div>
 
-      <p className="mt-8 max-w-[300px] text-[10.5px] leading-relaxed text-white/25">
+      <p className="mt-9 max-w-[300px] text-[10.5px] font-semibold leading-relaxed text-ink/30">
         Single signed-in user · no external auth · built for the Coy SDE intern assignment.
       </p>
     </section>

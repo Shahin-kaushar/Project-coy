@@ -1,15 +1,20 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #08080d;
-  --color-surface: #14141e;
-  --color-surface-strong: #1c1c29;
-  --color-line: rgba(255, 255, 255, 0.1);
-  --color-coy: #ff4d6d;
-  --color-coy-soft: #ff8a5b;
-  --color-mint: #57e3a1;
+  --color-cream: #faf6f1;
+  --color-ink: #111014;
+  --color-pink: #ff2d78;
+  --color-pink-soft: #ffd9e5;
+  --color-yellow: #ffd84d;
+  --color-green: #2ed47a;
+  --color-sky: #bce0f6;
+  --color-peach: #f7d6bc;
+  --color-lilac: #dcd0f5;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", sans-serif;
+  --shadow-hard: 6px 6px 0 var(--color-ink);
+  --shadow-hard-sm: 4px 4px 0 var(--color-ink);
 }
 
 html,
@@ -18,13 +23,8 @@ body {
 }
 
 body {
-  background-color: #08080d;
-  background-image:
-    radial-gradient(900px 520px at 82% -12%, rgba(255, 77, 109, 0.16), transparent 62%),
-    radial-gradient(760px 480px at -12% 8%, rgba(124, 92, 255, 0.14), transparent 58%),
-    radial-gradient(700px 420px at 50% 110%, rgba(255, 138, 91, 0.08), transparent 60%);
-  background-attachment: fixed;
-  color: #f5f5f8;
+  background-color: var(--color-cream);
+  color: var(--color-ink);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   overscroll-behavior-y: none;
@@ -35,7 +35,7 @@ body {
 }
 
 ::selection {
-  background: rgba(255, 77, 109, 0.35);
+  background: rgba(255, 45, 120, 0.25);
 }
 
 .no-scrollbar {
@@ -46,32 +46,32 @@ body {
   display: none;
 }
 
-.card-shadow {
-  box-shadow:
-    0 40px 80px -40px rgba(255, 77, 109, 0.35),
-    0 18px 40px -18px rgba(0, 0, 0, 0.9);
-}
-
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  background-image: linear-gradient(120deg, #ff4d6d, #ff8a5b);
-  padding: 0.75rem 1.25rem;
+  border: 2px solid var(--color-ink);
+  background: var(--color-pink);
+  padding: 0.75rem 1.35rem;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: #16060b;
-  transition: transform 0.15s ease, filter 0.15s ease;
+  font-weight: 700;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-hard-sm);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
 }
 
 .btn-primary:hover {
-  filter: brightness(1.06);
+  background: #ff4a8c;
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-ink);
 }
 
 .btn-ghost {
@@ -80,21 +80,61 @@ body {
   justify-content: center;
   gap: 0.5rem;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.04);
-  padding: 0.75rem 1.25rem;
+  border: 2px solid var(--color-ink);
+  background: #ffffff;
+  padding: 0.75rem 1.35rem;
   font-size: 0.875rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-  transition: background-color 0.15s ease, transform 0.15s ease;
+  font-weight: 700;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-hard-sm);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
 }
 
 .btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: #fff4e8;
 }
 
 .btn-ghost:active {
-  transform: scale(0.97);
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-ink);
+}
+
+.btn-primary:disabled,
+.btn-ghost:disabled {
+  opacity: 0.45;
+  transform: none;
+  box-shadow: var(--shadow-hard-sm);
+}
+
+.btn-green {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-ink);
+  background: var(--color-green);
+  padding: 0.75rem 1.35rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-hard-sm);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background-color 0.12s ease;
+}
+
+.btn-green:hover {
+  background: #24c46e;
+}
+
+.btn-green:active {
+  transform: translate(3px, 3px);
+  box-shadow: 0 0 0 var(--color-ink);
 }
 
 @keyframes fade-in {
@@ -109,11 +149,11 @@ body {
 @keyframes pop-in {
   from {
     opacity: 0;
-    transform: translateY(14px) scale(0.94);
+    transform: translateY(16px) scale(0.94) rotate(-2deg);
   }
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0) scale(1) rotate(0deg);
   }
 }
 
@@ -139,17 +179,17 @@ body {
 }
 
 .animate-pop-in {
-  animation: pop-in 0.32s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation: pop-in 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 .animate-rise {
-  animation: rise 0.28s ease both;
+  animation: rise 0.26s ease both;
 }
 
 .skeleton {
   position: relative;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(17, 16, 20, 0.07);
 }
 
 .skeleton::after {
@@ -160,8 +200,18 @@ body {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.08),
+    rgba(255, 255, 255, 0.65),
     transparent
   );
-  animation: shimmer 1.6s infinite;
+  animation: shimmer 1.5s infinite;
+}
+
+.sticker {
+  position: absolute;
+  transform: rotate(-8deg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-pink);
+  outline-offset: 3px;
 }

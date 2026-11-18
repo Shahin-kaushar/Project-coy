@@ -8,16 +8,15 @@ import { HeartIcon, SparkIcon, XIcon } from "./icons";
 
 function DeckSkeleton() {
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[30px] border border-white/10 bg-surface">
-      <div className="skeleton h-full w-full" />
-      <div className="absolute inset-x-0 bottom-0 space-y-3 bg-gradient-to-t from-black/80 to-transparent p-5 pt-16">
-        <div className="skeleton h-6 w-40 rounded-full" />
-        <div className="skeleton h-3 w-52 rounded-full" />
-        <div className="skeleton h-3 w-44 rounded-full" />
+    <div className="absolute inset-0 flex flex-col overflow-hidden rounded-[26px] border-2 border-ink bg-white shadow-hard">
+      <div className="skeleton min-h-0 flex-1" />
+      <div className="space-y-2.5 border-t-2 border-ink p-4">
+        <div className="skeleton h-6 w-36 rounded-full" />
+        <div className="skeleton h-3 w-48 rounded-full" />
+        <div className="skeleton h-3 w-40 rounded-full" />
         <div className="flex gap-2 pt-1">
           <div className="skeleton h-6 w-16 rounded-full" />
           <div className="skeleton h-6 w-20 rounded-full" />
-          <div className="skeleton h-6 w-14 rounded-full" />
         </div>
       </div>
     </div>
@@ -88,11 +87,6 @@ export default function DiscoverTab({ onViewMatches }) {
           previous ? { ...previous, matches: previous.matches + 1 } : previous,
         );
       }
-
-      // Refresh the server-side counters once the write has landed.
-      setStats((previous) =>
-        previous ? { ...previous, remaining: Math.max(previous.remaining, 0) } : previous,
-      );
     } catch (swipeError) {
       setError(swipeError.message);
       setProfiles((previous) => [
@@ -143,22 +137,22 @@ export default function DiscoverTab({ onViewMatches }) {
 
   return (
     <section className="flex h-full flex-col px-4">
-      <div className="flex items-center justify-between px-1 pb-2 pt-1 text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
-        <span>
-          {stats
-            ? `${remaining} ${remaining === 1 ? "person" : "people"} left`
-            : "Loading deck"}
+      <div className="flex items-center justify-between px-0.5 pb-2.5 pt-1">
+        <span className="rounded-full border-2 border-ink bg-white px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em]">
+          {stats ? `${remaining} ${remaining === 1 ? "person" : "people"} left` : "Loading deck"}
         </span>
-        <span>{stats ? `${stats.matches} matches` : "—"}</span>
+        <span className="rounded-full border-2 border-ink bg-yellow px-3 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em]">
+          {stats ? `${stats.matches} ${stats.matches === 1 ? "match" : "matches"}` : "—"}
+        </span>
       </div>
 
       {error ? (
-        <div className="mb-2 flex items-start justify-between gap-3 rounded-2xl border border-coy/30 bg-coy/10 px-3.5 py-2.5 text-[12px] text-coy-soft animate-rise">
+        <div className="mb-2.5 flex animate-rise items-start justify-between gap-3 rounded-2xl border-2 border-ink bg-yellow px-3.5 py-2.5 text-[12px] font-semibold shadow-hard-sm">
           <span>{error}</span>
           <button
             type="button"
             aria-label="Dismiss error"
-            className="text-base leading-none text-coy-soft/70 hover:text-coy-soft"
+            className="text-base leading-none text-ink/60 hover:text-ink"
             onClick={() => setError("")}
           >
             ×
@@ -170,12 +164,14 @@ export default function DiscoverTab({ onViewMatches }) {
         {profiles === null ? <DeckSkeleton /> : null}
 
         {isEmpty ? (
-          <div className="flex h-full animate-fade-in flex-col items-center justify-center px-6 text-center">
-            <div className="mb-5 grid h-16 w-16 place-items-center rounded-[22px] border border-white/10 bg-white/5 text-coy">
+          <div className="flex h-full animate-fade-in flex-col items-center justify-center rounded-[26px] border-2 border-ink bg-white px-6 text-center shadow-hard">
+            <div className="mb-5 grid h-16 w-16 place-items-center rounded-2xl border-2 border-ink bg-yellow shadow-hard-sm">
               <SparkIcon className="h-7 w-7" />
             </div>
-            <h2 className="text-xl font-semibold">That&apos;s everyone for now</h2>
-            <p className="mt-2 max-w-[270px] text-[13px] leading-relaxed text-white/50">
+            <h2 className="font-display text-2xl font-extrabold tracking-tight">
+              That&apos;s everyone for now
+            </h2>
+            <p className="mt-2 max-w-[270px] text-[13px] leading-relaxed text-ink/55">
               You have seen every profile in this demo. Check your matches, or reset the deck to
               run the walkthrough again.
             </p>
@@ -214,13 +210,13 @@ export default function DiscoverTab({ onViewMatches }) {
         ) : null}
       </div>
 
-      <div className="flex items-center justify-center gap-5 py-4">
+      <div className="flex items-center justify-center gap-6 py-4">
         <button
           type="button"
           aria-label="Pass"
           disabled={isEmpty || profiles === null}
           onClick={() => topCardRef.current?.swipe("left")}
-          className="grid h-16 w-16 place-items-center rounded-full border border-white/10 bg-white/5 text-white/70 shadow-lg transition hover:border-white/20 hover:bg-white/10 active:scale-95 disabled:opacity-30"
+          className="grid h-16 w-16 place-items-center rounded-full border-2 border-ink bg-white text-ink shadow-hard-sm transition-all hover:bg-[#fff4e8] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-40 disabled:shadow-hard-sm"
         >
           <XIcon className="h-6 w-6" />
         </button>
@@ -230,13 +226,13 @@ export default function DiscoverTab({ onViewMatches }) {
           aria-label="Like"
           disabled={isEmpty || profiles === null}
           onClick={() => topCardRef.current?.swipe("right")}
-          className="grid h-16 w-16 place-items-center rounded-full bg-gradient-to-br from-coy to-coy-soft text-black shadow-[0_18px_36px_-14px_rgba(255,77,109,0.7)] transition hover:brightness-105 active:scale-95 disabled:opacity-30"
+          className="grid h-16 w-16 place-items-center rounded-full border-2 border-ink bg-pink text-ink shadow-hard-sm transition-all hover:bg-[#ff4a8c] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none disabled:opacity-40 disabled:shadow-hard-sm"
         >
           <HeartIcon className="h-6 w-6" />
         </button>
       </div>
 
-      <p className="pb-1 text-center text-[10px] uppercase tracking-[0.16em] text-white/25">
+      <p className="pb-1 text-center text-[10px] font-bold uppercase tracking-[0.16em] text-ink/35">
         Swipe or use ← → keys
       </p>
 

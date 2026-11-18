@@ -10,7 +10,7 @@ const TABS = [
 
 export default function TabBar({ active, onChange }) {
   return (
-    <nav className="shrink-0 border-t border-white/10 bg-ink/70 px-4 pb-[max(env(safe-area-inset-bottom),0.5rem)] pt-2 backdrop-blur-xl">
+    <nav className="shrink-0 border-t-2 border-ink bg-cream px-3 pb-[max(env(safe-area-inset-bottom),0.4rem)] pt-2">
       <div className="mx-auto flex max-w-[420px] items-center justify-around">
         {TABS.map(({ id, label, Icon }) => {
           const selected = active === id;
@@ -20,18 +20,24 @@ export default function TabBar({ active, onChange }) {
               type="button"
               onClick={() => onChange(id)}
               aria-current={selected ? "page" : undefined}
-              className={`group flex w-20 flex-col items-center gap-1 rounded-2xl px-2 py-1.5 text-[10px] font-medium tracking-wide transition ${
-                selected ? "text-white" : "text-white/40 hover:text-white/70"
-              }`}
+              className="group flex w-24 flex-col items-center gap-1 py-0.5"
             >
               <span
-                className={`grid h-9 w-14 place-items-center rounded-full transition ${
-                  selected ? "bg-coy/15 text-coy" : "text-white/50 group-hover:bg-white/5"
+                className={`grid h-9 w-14 place-items-center rounded-full border-2 transition-all ${
+                  selected
+                    ? "border-ink bg-pink text-ink shadow-hard-sm"
+                    : "border-transparent text-ink/45 group-hover:bg-ink/5"
                 }`}
               >
-                <Icon className="h-[21px] w-[21px]" />
+                <Icon className="h-[20px] w-[20px]" />
               </span>
-              {label}
+              <span
+                className={`text-[10px] font-bold tracking-wide ${
+                  selected ? "text-ink" : "text-ink/40"
+                }`}
+              >
+                {label}
+              </span>
             </button>
           );
         })}

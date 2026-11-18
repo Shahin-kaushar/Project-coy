@@ -179,6 +179,14 @@ The trade-off: it is **single-instance only** and relies on a writable filesyste
 platform (e.g. Vercel) the filesystem is ephemeral, so a real deployment should swap
 `lib/db.mjs` for Postgres/SQLite. The rest of the app is storage-agnostic.
 
+### Visual language
+
+The UI follows Coy's real brand rather than a generic dating-app look: a warm cream canvas,
+ink-black 2px outlines with hard offset shadows, hot pink (`#FF2D78`) primary actions, yellow
+sticker badges, green for the positive/WhatsApp-style action, and chunky Archivo display type
+over Inter body text. Portraits are generated flat illustrations in the same palette, so the
+demo needs no external images or licensing.
+
 ### Other decisions
 
 - **Tabs are client state, not routes.** The brief asks for a tab bar, and a phone-shell demo does

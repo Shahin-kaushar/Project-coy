@@ -5,13 +5,6 @@ const nextConfig = {
   turbopack: {
     root: import.meta.dirname,
   },
-  images: {
-    // Avatars are local, first-party placeholder SVGs committed to /public.
-    // The CSP keeps them inert if one is ever opened directly in a browser.
-    dangerouslyAllowSVG: true,
-    contentDispositionType: "attachment",
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  },
 };
 
 export default nextConfig;

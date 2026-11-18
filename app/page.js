@@ -11,8 +11,8 @@ export default function Page() {
   const [tab, setTab] = useState("discover");
 
   return (
-    <div className="mx-auto flex h-dvh w-full max-w-[460px] flex-col overflow-hidden sm:border-x sm:border-white/5">
-      <Header />
+    <div className="mx-auto flex h-dvh w-full max-w-[460px] flex-col overflow-hidden sm:border-x-2 sm:border-ink">
+      <Header tab={tab} />
 
       <main className="relative min-h-0 flex-1">
         {tab === "home" ? (

@@ -9,47 +9,51 @@ export const CardFace = forwardRef(function CardFace({ profile, priority = false
   return (
     <div
       ref={ref}
-      className="relative h-full w-full select-none overflow-hidden rounded-[30px] border border-white/10 bg-surface card-shadow"
+      className="relative flex h-full w-full select-none flex-col overflow-hidden rounded-[26px] border-2 border-ink bg-white shadow-hard"
     >
-      <Image
-        src={profile.photo}
-        alt={`${profile.name}'s photo`}
-        fill
-        priority={priority}
-        sizes="(max-width: 460px) 100vw, 430px"
-        className="object-cover"
-        draggable={false}
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-black via-black/25 to-transparent" />
+      <div className="relative min-h-0 flex-1 overflow-hidden bg-peach">
+        <Image
+          src={profile.photo}
+          alt={`${profile.name}'s photo`}
+          fill
+          priority={priority}
+          sizes="(max-width: 460px) 100vw, 430px"
+          className="object-cover"
+          draggable={false}
+          unoptimized
+        />
+        <span className="absolute bottom-3 left-3 rounded-full border-2 border-ink bg-white px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-[0.12em] shadow-hard-sm">
+          {profile.interests[0]}
+        </span>
+      </div>
 
-      <div className="absolute inset-x-0 bottom-0 p-5">
-        <div className="flex items-end justify-between gap-3">
-          <div className="min-w-0">
-            <h2 className="truncate text-[27px] font-semibold leading-tight">
-              {profile.name.split(" ")[0]}{" "}
-              <span className="text-xl font-normal text-white/60">{profile.age}</span>
-            </h2>
-            <p className="mt-1 flex items-center gap-1.5 truncate text-[12.5px] text-white/60">
-              <PinIcon className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">
-                {profile.city} · {profile.college}
-              </span>
-            </p>
-          </div>
-          <span className="mb-1 shrink-0 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[9px] uppercase tracking-[0.16em] text-white/70 backdrop-blur">
+      <div className="shrink-0 border-t-2 border-ink bg-white px-4 pb-4 pt-3">
+        <div className="flex items-end justify-between gap-2">
+          <h2 className="truncate font-display text-[27px] font-extrabold leading-none tracking-tight">
+            {profile.name.split(" ")[0]}{" "}
+            <span className="font-bold text-ink/45">{profile.age}</span>
+          </h2>
+          <span className="mb-0.5 shrink-0 rounded-full border-2 border-ink bg-yellow px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wide">
             New
           </span>
         </div>
 
-        <p className="mt-2 line-clamp-2 text-[13px] leading-relaxed text-white/75">
+        <p className="mt-1.5 flex items-center gap-1 truncate text-[12px] font-medium text-ink/55">
+          <PinIcon className="h-3.5 w-3.5 shrink-0" />
+          <span className="truncate">
+            {profile.city} · {profile.college}
+          </span>
+        </p>
+
+        <p className="mt-1.5 line-clamp-2 text-[12.5px] leading-relaxed text-ink/75">
           {profile.bio}
         </p>
 
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {profile.interests.map((interest) => (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {profile.interests.slice(1, 4).map((interest) => (
             <span
               key={interest}
-              className="rounded-full border border-white/15 bg-white/10 px-2.5 py-1 text-[11px] text-white/75 backdrop-blur"
+              className="rounded-full border-2 border-ink/20 bg-cream px-2 py-0.5 text-[10.5px] font-semibold text-ink/70"
             >
               {interest}
             </span>
@@ -63,10 +67,10 @@ export const CardFace = forwardRef(function CardFace({ profile, priority = false
 export function CardPreview({ profile, depth }) {
   return (
     <div
-      className="absolute inset-0 overflow-hidden rounded-[30px] border border-white/10 bg-surface"
+      className="absolute inset-0 overflow-hidden rounded-[26px] border-2 border-ink bg-white"
       style={{
-        transform: `translateY(${depth * 12}px) scale(${1 - depth * 0.045})`,
-        opacity: depth === 1 ? 0.95 : 0.5,
+        transform: `translateY(${depth * 10}px) scale(${1 - depth * 0.04})`,
+        opacity: depth === 1 ? 1 : 0.6,
         zIndex: 20 - depth,
       }}
       aria-hidden="true"
@@ -78,15 +82,16 @@ export function CardPreview({ profile, depth }) {
         sizes="(max-width: 460px) 100vw, 430px"
         className="object-cover"
         draggable={false}
+        unoptimized
       />
-      <div className="absolute inset-0 bg-black/35" />
+      <div className="absolute inset-0 bg-cream/50" />
     </div>
   );
 }
 
 const SwipeCard = forwardRef(function SwipeCard({ profile, priority, onSwiped }, ref) {
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-280, 0, 280], [-14, 0, 14]);
+  const rotate = useTransform(x, [-280, 0, 280], [-13, 0, 13]);
   const likeOpacity = useTransform(x, [24, 130], [0, 1]);
   const passOpacity = useTransform(x, [-130, -24], [1, 0]);
   const committed = useRef(false);
@@ -132,13 +137,13 @@ const SwipeCard = forwardRef(function SwipeCard({ profile, priority, onSwiped },
 
       <motion.div
         style={{ opacity: likeOpacity }}
-        className="pointer-events-none absolute left-5 top-6 -rotate-12 rounded-xl border-[3px] border-mint px-3.5 py-1 text-xl font-extrabold uppercase tracking-[0.2em] text-mint"
+        className="pointer-events-none absolute left-4 top-4 -rotate-12 rounded-xl border-[3px] border-ink bg-green px-3.5 py-1 font-display text-xl font-extrabold uppercase tracking-[0.16em] shadow-hard-sm"
       >
         Like
       </motion.div>
       <motion.div
         style={{ opacity: passOpacity }}
-        className="pointer-events-none absolute right-5 top-6 rotate-12 rounded-xl border-[3px] border-coy px-3.5 py-1 text-xl font-extrabold uppercase tracking-[0.2em] text-coy"
+        className="pointer-events-none absolute right-4 top-4 rotate-12 rounded-xl border-[3px] border-ink bg-pink px-3.5 py-1 font-display text-xl font-extrabold uppercase tracking-[0.16em] shadow-hard-sm"
       >
         Nope
       </motion.div>
