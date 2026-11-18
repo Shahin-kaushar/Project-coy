@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" width="600" height="800" role="img" aria-label="Placeholder portrait">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fddb92"/>
+      <stop offset="1" stop-color="#a45a2a"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="24%" cy="14%" r="72%">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="shade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0.45" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.28"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="800" fill="url(#bg)"/>
+  <rect width="600" height="800" fill="url(#glow)"/>
+  <circle cx="120" cy="270" r="154" fill="#ffffff" opacity="0.08"/>
+  <circle cx="320" cy="250" r="110" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="2"/>
+  <circle cx="520" cy="700" r="260" fill="#000000" opacity="0.10"/>
+
+  <g fill="#0a0a10" opacity="0.26">
+    <circle cx="300" cy="318" r="108"/>
+    <path d="M300 408c-104 0-174 68-186 168l-7 224h386l-7-224c-12-100-82-168-186-168z"/>
+  </g>
+
+  <text x="560" y="150" text-anchor="end" font-family="Inter, 'Segoe UI', Arial, sans-serif" font-size="150" font-weight="700" letter-spacing="-6" fill="#ffffff" opacity="0.10">SK</text>
+  <rect width="600" height="800" fill="url(#shade)"/>
+</svg>

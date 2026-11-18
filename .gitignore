@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# demo database (recreated from lib/seed.mjs on first request)
+/data/*.json
+/data/*.tmp
