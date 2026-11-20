@@ -225,8 +225,3 @@ demo needs no external images or licensing.
 - No messaging after a match — out of scope for this task.
 
 ---
-
-## Part A
-
-The two feature proposals, with reasoning and privacy considerations, are in
-[`PART_A.md`](PART_A.md).
