@@ -1,120 +1,142 @@
 # Part A — Two features Coy should build
 
-Context used: the public product (getcoy.com) and the flows listed in the brief — phone OTP, adding
-a crush, email verification, the invite link, and the extra-slots paywall. The OTP step needs a real
-phone number, so I could not complete sign-up end to end; the proposals below are grounded in the
-product's stated model rather than in guesses about its internals.
+## What I looked at
 
-Coy's differentiator is unusual: **no profiles, no photos, no chat, no swiping.**
-That constraint is the product. Both proposals are designed to strengthen it, not dilute it.
+I reviewed the live flows reachable without a phone: the app entry screen at `app.getcoy.com`, the
+public heads-up landing page (`getcoy.com/n`), the stop-messages page (`getcoy.com/stop`), the
+pricing and invite flow, the Terms, and the "How Coy works" write-up. I could not complete phone OTP
+end to end because it needs a real number, so the proposals below are grounded in the product's
+mechanics — 3 free slots, one anonymous heads-up per week up to 3 total, WhatsApp-first delivery
+with SMS fallback, no messages 10pm–8am, 180-day deletion of unmatched entries, and a permanent
+global "stop messages" link — rather than in guesses about the codebase.
 
----
-
-## 1. A private "not interested" control for the person receiving a heads-up
-
-**What it is**
-
-Today the receiver of an anonymous heads-up has two options: add the person back, or ignore the
-message. Ignoring is passive, and the sender can keep adding them (up to their slot limit, across
-numbers/emails). That is uncomfortable if the sender is an ex, a colleague, or someone who has
-been told no before.
-
-Give the receiver a quiet, non-identifying control on the heads-up screen:
-
-- "Don't show me this again" — silently stops that sender from ever adding or nudging this person.
-- Optionally: "Report this" — routes to trust & safety with the hashed contact, still without
-  revealing the sender's identity to the receiver.
-- The sender sees **nothing different**. No "blocked" message, no change in count. Their heads-up
-  simply never lands, exactly as if the recipient were not on Coy.
-
-**Why it is required**
-
-- **Safety.** Anonymity is Coy's feature and also its abuse vector: anyone who knows your number
-  can send you a heads-up. Without a receiver-side control, the only remedy is "stop all messages",
-  which punishes the user for someone else's behaviour.
-- **Trust and retention.** A single unsettling heads-up is enough to make someone delete the app.
-  A silent block keeps them in the product without a confrontation.
-- **It protects the core promise.** Coy promises "nobody ever finds out" — including, crucially,
-  that a block is invisible. A block that leaks would violate the whole model.
-
-**Privacy edge cases to get right**
-
-- The block must be unobservable: no error, no changed copy, no timing difference, no "this person
-  can't be added" message.
-- Blocking must not be inferable from counts ("3 people added you" must exclude blocked senders,
-  or the count itself becomes a side channel).
-- Never confirm whether a given phone/email is on Coy — the same response for "not a user",
-  "blocked", and "invalid".
-- Store blocks as keyed hashes, not raw contact details; keep an audit trail for safety reviews but
-  never expose it in-product.
-- A block should apply to the pair, not the account, so creating a new account does not bypass it
-  (rate-limit sign-ups by verified contact).
-
-**Rough shape**
-
-A `blocks(sender_hash, recipient_hash, created_at)` table checked in the heads-up fan-out path,
-plus a report queue. The receiver-facing UI is a single tap on the heads-up link — no account setup
-required, which is also the highest-converting safety surface.
+Both proposals protect the thing that makes Coy different: **no profiles, no photos, no swiping,
+no chat, and no way to work out who added you.** Neither one turns Coy into a dating app.
 
 ---
 
-## 2. A time-boxed "safe opener" after a mutual match
+## 1. "Don't contact me about this person" — a silent, per-sender block
 
 **What it is**
 
-When two people match, Coy currently reveals how to reach each other and hands the conversation to
-WhatsApp. That is respectful of privacy, but it creates a cliff: most matches die in the first
-message, especially for people who are shy or who do not want to open with a cold text.
+Today the only lever a recipient has is the link at the bottom of a heads-up: stop **all** Coy
+messages, permanently. That is a nuclear option. If one person — an ex, a colleague, someone with
+power over you at work or college — keeps adding you, your choices are to tolerate it or to give up
+the product entirely.
 
-After a mutual match, offer a small, structured opener:
+Add a quiet block on the heads-up page itself, no account needed:
 
-- A choice of 3 short prompts ("What made you add me?", "One song you'd send a stranger",
-  "Coffee or a walk?") or a 100-character custom note.
-- Each side can send **one** opener, only after the match is mutual.
-- The opener expires in 7 days. No read receipts, no typing indicators, no free-form chat.
-- The match still reveals contact details; the opener is a bridge, not a replacement.
+- "Don't contact me about this person again" silently drops every future heads-up from that sender,
+  including from any new account they create with the same verified contact.
+- It excludes that sender from the "several people added you" count, so the count itself cannot
+  become a side channel.
+- The sender sees **exactly what they see today**: nothing. No "blocked" state, no error, no change
+  in timing, no change in the slot rules. Their slot stays used, exactly as if you had not joined.
+- A separate "Report" action reaches trust & safety with the hashed contact; it is not required to
+  block.
 
 **Why it is required**
 
-- **The match moment is the product's highest-value moment**, and it currently ends at "here is a
-  phone number". Reducing the cost of the first move directly increases the number of matches that
-  become conversations — the metric that makes Coy worth paying for.
-- **It is safer than an open chat.** A single, prompt-guided message avoids the harassment and
-  pressure patterns that free-form DMs create, and expiry limits lingering contact.
-- **It helps the "who adds whom" imbalance.** Women are disproportionately on the receiving end of
-  anonymous attention; a low-pressure opener lets either side move first without a cold open.
-- **It keeps the brand promise.** No profiles, no photos, no infinite chat — just one human sentence
-  after a mutual signal.
+- **The current control punishes the wrong person.** "Stop all messages" ends Coy for the recipient
+  but does nothing to stop the sender, who can keep adding them. The person being harassed loses the
+  product; the person causing it loses nothing.
+- **The rules already acknowledge the risk.** The Terms forbid adding someone "to harass, prank,
+  embarrass or pressure them" and mention removing accounts — but that is reactive, after the
+  damage, and the recipient has no in-product way to make it stop.
+- **It is a trust feature, not a growth feature.** Coy's promise is that nothing is revealed without
+  consent. A receiver who cannot stop an unwanted anonymous message learns the opposite lesson:
+  anonymity protects the sender, not them.
+- **It matters most in the launch market.** Campus and young-professional users are the stated
+  audience, and they are the most likely to be on the receiving end of persistent attention from
+  someone they already know.
 
 **Privacy edge cases to get right**
 
-- Openers must be impossible to send before a mutual match, and must never be shown to a
-  non-match, even in aggregate.
-- Content moderation on the 100-character note (links, phone numbers, abuse) so the feature does
-  not become a vector for off-platform spam or harassment.
-- No "seen" state and no typing indicator: presence signals are the beginning of a chat app, and
-  the wrong kind of pressure.
-- Expiry and deletion must be honoured everywhere (logs, backups, support tooling).
-- If the match is later blocked/reported, the opener history disappears for both sides.
+- The block must be **unobservable**: no copy change, no error, no timing difference, and no
+  "this person cannot be added" message. A silent drop fits Coy's existing model because delivery is
+  never confirmed to the sender anyway.
+- **Counts must exclude blocked senders.** The heads-up already varies with how many people added
+  the same person; if blocked adds still contribute to the number, the count leaks the block.
+- **Never confirm account existence.** The block page must return the same response for "not a Coy
+  user", "already blocked", and "invalid link".
+- **Blocks live on the pair, not the account.** Key them by verified contact hashes, apply them to
+  both directions (a blocked person cannot later match with you through a new add), and rate-limit
+  new accounts by contact so the block cannot be bypassed.
+- **No retaliation surface.** The sender must never see a report or block, and the block must not
+  alter the sender's slot balance, because a slot change is observable.
+- Keep an internal audit trail for safety reviews, but never expose it in-product.
 
 **Rough shape**
 
-An `openers(match_id, sender_hash, prompt_id, body, expires_at)` table, one row per side, with a
-7-day TTL enforced at read time. Moderation runs asynchronously on send; unread openers expire
+A `blocks(blocker_contact_hash, sender_contact_hash, created_at)` table checked in the heads-up
+fan-out path and in the match computation, plus a report queue. The UI is one tap from the public
+heads-up link, which is also the highest-intent safety surface Coy has.
+
+---
+
+## 2. One structured opener at the match moment
+
+**What it is**
+
+When two people match, Coy reveals the contact the other person used and hands the conversation to
+WhatsApp or email. That is respectful of privacy, but it is also where the product's value ends: the
+user who was too nervous to say something has now been asked to say something, to a person they
+like, in an open-ended chat.
+
+Give both sides **one** small, time-boxed opener on the match screen:
+
+- Pick one of three short prompts ("What made you add me?", "One song you'd send a stranger",
+  "Coffee or a walk?") or write up to ~120 characters.
+- The other person can reply once, also with a prompt or a short note.
+- The opener expires after 7 days; the WhatsApp/email handoff stays exactly as it is.
+- No free-form chat, no read receipts, no typing indicators, no online status.
+
+**Why it is required**
+
+- **The match is the payoff, and it currently dead-ends.** The entire product exists to remove the
+  risk of making the first move. At the moment that risk is removed, the user is pushed into the
+  most exposed channel they own — a WhatsApp message to their crush. Many matches will simply go
+  quiet there, and Coy will never know it lost them.
+- **Structured beats open.** A prompt is lower-pressure than a blank text box, especially for the
+  shy users Coy is designed for. It also produces a safer first message than a cold DM.
+- **It preserves "no chat."** One opener is not a conversation surface; it is the digital equivalent
+  of "say hi" that the current match screen already asks for, with the awkwardness removed. The
+  product's positioning stays intact.
+- **It compounds the paid value.** More matches turning into conversations makes each slot worth
+  more, which is the only thing Coy sells.
+
+**Privacy edge cases to get right**
+
+- **Only after a mutual match.** Never sendable before, never visible to a non-match, and never
+  summarized in a way that reveals who added whom.
+- **No presence signals.** No read state, no typing indicator, no "last seen" — each one turns
+  anonymity into surveillance and changes the product's feel.
+- **Expiry is enforced server-side** and openers are deleted on block, report, account deletion, or
+  expiry — everywhere, including backups and support tooling.
+- **Moderate the custom note** for links, phone numbers, sexual content, and abuse, or the feature
+  becomes a spam and off-platform contact vector.
+- **Do not add engagement mechanics.** No streaks, no daily limits beyond one, no notifications
+  designed to pull people back. The opener should end, not become a habit.
+- **Localize the prompts** (Hinglish, campus context) — Coy launched on Indian campuses, and
+  generic English prompts will feel like a different product.
+
+**Rough shape**
+
+`openers(match_id, sender_contact_hash, prompt_id, body, expires_at)`, one row per side, with a
+7-day TTL checked at read time. Moderation runs asynchronously at send; unread openers expire
 silently.
 
 ---
 
 ## What I deliberately did **not** propose
 
-- **Public profiles, photos, or open chat.** That is a different product and would erase Coy's only
-  real moat.
-- **A swipe feed as part of the core experience.** The assignment's Part B asks for one, and it is a
-  useful exploration, but it works best as an explicitly opt-in, separate tab — not something that
-  changes what Coy fundamentally promises. Mixing the two without a clear boundary would confuse
-  the "double-blind" mental model.
-- **Read receipts, online status, or "who viewed you".** Each one turns anonymity into a
-  surveillance surface and contradicts the pitch.
+- **Profiles, photos, or open chat.** They would erase the only real moat Coy has.
+- **"See who liked you", hints, or read receipts.** Each one converts the double-blind into a
+  surveillance product; Coy's own pricing page explicitly refuses to sell them.
+- **Campus leaderboards or smaller counts.** Coy already shows an aggregate count when several
+  people add the same person; making that more granular would let people work out identity.
+- **A swipe feed as the core experience.** The assignment's Part B asks for one, and it is a useful
+  exploration, but it belongs in a clearly separate, opt-in tab — not in the product's main promise.
 
-If I had to ship exactly one thing first, it would be the **private block**: it is small, it
-protects users who are already exposed to risk, and it makes the rest of the product safer to grow.
+If I could ship only one of the two, it would be the **block**. It is small, it protects users who
+are already exposed to risk, and it makes everything else Coy wants to build safer.
